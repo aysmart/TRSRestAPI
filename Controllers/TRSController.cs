@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 using System.Diagnostics;
 using TRSRestAPI.Models;
 using TRSRestAPI.Repository;
@@ -121,6 +122,29 @@ namespace TRSRestAPI.Controllers
             }
 
             return Ok(token);
+        }
+
+        [HttpPost]
+        [Route("search")]
+        public IActionResult Get([FromBody] CountryName country)
+        {
+            //Country Variable
+            string countryLink = "https://restcountries.com/v3.1/name/" + country.name;
+            // Get Country Details
+            var client = new RestClient(countryLink);
+            var request = new RestRequest("", Method.Get);
+            request.AddHeader("content-type", "application/json");
+            RestResponse response = client.Execute(request);
+
+            // Get Weather Forecast Details
+            var apiKeys = "0b819f8a860dbf4de23350f1243bdebe";
+            var weatherLink = "http://api.openweathermap.org/data/2.5/forecast?q=" + country.name + "&appid=" + apiKeys;
+            var client2 = new RestClient(weatherLink);
+            var request2 = new RestRequest("", Method.Get);
+            request.AddHeader("content-type", "application/json");
+            RestResponse response2 = client2.Execute(request2);
+
+            return Json(response.Content.ToString() + response2.Content.ToString());
         }
 
     }

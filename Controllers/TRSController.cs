@@ -25,6 +25,7 @@ namespace TRSRestAPI.Controllers
         }
 
         //[AllowAnonymous]
+        //Gets all travel Data in the Database
         [HttpGet]
         [Route("getTravelData")]
         public IActionResult Get()
@@ -34,10 +35,21 @@ namespace TRSRestAPI.Controllers
             return Json(TravelReqs);
         }
 
+        //Gets a Single Instance of Travel Data by Request Id
+        [HttpGet]
+        [Route("singleTravelData")]
+        public IActionResult Get([FromBody] int requestID)
+        {
+            var TravelReqs = _db.TravelRequests.Find(requestID);
+            return Json(TravelReqs);
+        }
+
+        //Adds a new instance of Travel Data
         [HttpPost]
         [Route("addTravelData")]
         public IActionResult Post([FromBody] TravelRequests TravelReq)
         {
+            //Created a new instance of Travel Request
             TravelRequests travelRequest = new TravelRequests
             {
                 RequestDate = DateTime.Now,
@@ -53,17 +65,21 @@ namespace TRSRestAPI.Controllers
                 RequestStatus = TravelReq.RequestStatus
             };
 
+            //Saves the instance in Database
             _db.TravelRequests.Add(travelRequest);
             _db.SaveChanges();
 
             return Json(travelRequest.RequestID);
         }
 
+        //Updates a travel Data Instance
         [HttpPut]
         [Route("updateTravelData")]
         public IActionResult Put([FromBody] TravelRequests TravelReq)
         {
             var travelRequest = _db.TravelRequests.Find(TravelReq.RequestID);
+
+            //Disallow Update if Travel Data Instance is Not found or has been booked
             if (travelRequest == null || travelRequest.RequestStatus=="Booked")
             {
                 return Json("Request Instance is either not found or it has been booked!");
@@ -80,21 +96,27 @@ namespace TRSRestAPI.Controllers
             travelRequest.TravelerName = TravelReq.TravelerName;
             travelRequest.RequestStatus = TravelReq.RequestStatus;
 
+            //Updates Travel Request Instance if found and not booked
             _db.TravelRequests.Update(travelRequest);
             _db.SaveChanges();
 
-            return Json("Done");
+            return Json("Done!");
         }
 
+        //Deletes Travel Instance
         [HttpDelete]
         [Route("deleteTravelData")]
-        public IActionResult Delete([FromBody] int id)
+        public IActionResult Delete([FromBody] int requestID)
         {
-            var travelRequest = _db.TravelRequests.Find(id);
+            var travelRequest = _db.TravelRequests.Find(requestID);
+            
+            //Verifies if Request Instance Exits or has been booked
             if (travelRequest == null || travelRequest.RequestStatus == "Booked")
             {
                 return Json("Request Instance is either not found or it has been booked!");
             }
+
+            //Deletes Request if found and not booked
             _db.TravelRequests.Remove(travelRequest);
             _db.SaveChanges();
             return Json("Deleted Successfully!");
@@ -105,30 +127,25 @@ namespace TRSRestAPI.Controllers
         [Route("authenticate")]
         public IActionResult Authenticate([FromBody] AuthenticationModel user)
         {
-            /*var register = new AuthenticationModel
-            {
-                UserName = user.UserName,
-                UserPassword = user.UserPassword
-            };
-
-            _db.UserAuthentication.Add(register);
-            _db.SaveChanges();*/
-
+            //Verifies User and Generates a Bearer Authorization Token
             var token = _jWTManager.Authenticate(user);
 
+            //If Authentication fails, it blocks the user access
             if (token == null)
             {
                 return Unauthorized();
             }
 
+            //Returns Token If Authentication passes
             return Ok(token);
         }
 
-        [HttpPost]
+
+        //Method For Searching Country Detail and Weather Forcast
+        [HttpGet]
         [Route("search")]
-        public IActionResult Get([FromBody] CountryName country)
+        public IActionResult Search([FromBody] CountryName country)
         {
-            //Country Variable
             string countryLink = "https://restcountries.com/v3.1/name/" + country.name;
             // Get Country Details
             var client = new RestClient(countryLink);
@@ -143,7 +160,7 @@ namespace TRSRestAPI.Controllers
             var request2 = new RestRequest("", Method.Get);
             request.AddHeader("content-type", "application/json");
             RestResponse response2 = client2.Execute(request2);
-
+            //Retorns Both Country Details and Weather Forcast Detail
             return Json(response.Content.ToString() + response2.Content.ToString());
         }
 

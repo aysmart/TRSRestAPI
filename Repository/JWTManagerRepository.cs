@@ -9,9 +9,9 @@ public class JWTManagerRepository : IJWTManagerRepository
 {
 	Dictionary<string, string> UsersRecs = new Dictionary<string, string>
 	{
-		{ "user1","password1"},
-		{ "user2","password2"},
-		{ "user3","password3"},
+		{ "pwc1","password1"},
+		{ "pwc2","password2"},
+		{ "pwc3","password3"},
 	};
 
 	private readonly IConfiguration iconfiguration;
@@ -29,7 +29,7 @@ public class JWTManagerRepository : IJWTManagerRepository
 			return null;
 		}
 
-		// Else we generate JSON Web Token
+		// Else generate JSON Web Token
 		var tokenHandler = new JwtSecurityTokenHandler();
 		var tokenKey = Encoding.UTF8.GetBytes(iconfiguration["JWT:Key"]);
 		var tokenDescriptor = new SecurityTokenDescriptor

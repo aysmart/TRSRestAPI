@@ -14,8 +14,8 @@ namespace TRSRestAPI.Models
         }
 
         public virtual DbSet<TravelRequests> TravelRequests { get; set; }
-        public virtual DbSet<CountryName> CountryNames { get; set; }
-        public virtual DbSet<AuthenticationModel> UserAuthentication { get; set; }
+        public virtual List<CountryName> CountryNames { get; set; }
+        public virtual List<AuthenticationModel> UserAuthentication { get; set; }
        
     }
 }

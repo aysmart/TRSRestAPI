@@ -68,7 +68,9 @@ Travel Requisition System
 
 ### Sample Body Data
 
-    1
+    {
+        "requestID":"1"
+    }
 
 ## Update An Existing Travel Request
 
@@ -105,7 +107,9 @@ Travel Requisition System
 
 ### Sample Body Data
 
-    1
+    {
+        "requestID":"1"
+    }
 
 ## Search For Country and Weather Forcast Details By Country Name
 

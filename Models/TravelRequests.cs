@@ -5,27 +5,16 @@ namespace TRSRestAPI.Models
     {
         [Key]
         public int RequestID { get; set; }
-        [Required]
-        public DateTime RequestDate { get; set; }
-        [Required]
-        public string SourceLocation { get; set; }
-        [Required]
-        public string SourceCountry { get; set; }
-        [Required]
-        public string DestinationLocation { get; set; }
-        [Required]
-        public string DestinationCountry { get; set; }
-        [Required]
+        public DateTime? RequestDate { get; set; }
+        public string? SourceLocation { get; set; }
+        public string? SourceCountry { get; set; }
+        public string? DestinationLocation { get; set; }
+        public string? DestinationCountry { get; set; }
         public DateTime DepartureTimestamp { get; set; }
-        [Required]
-        public string TravelClass { get; set; }
-        [Required]
-        public string TripType { get; set; }
-        [Required]
-        public string ChargeCode { get; set; }
-        [Required]
-        public string TravelerName { get; set; }
-        [Required]
-        public string RequestStatus { get; set; }
+        public string? TravelClass { get; set; }
+        public string? TripType { get; set; }
+        public string? ChargeCode { get; set; }
+        public string? TravelerName { get; set; }
+        public string? RequestStatus { get; set; }
     }
 }

@@ -38,10 +38,10 @@ namespace TRSRestAPI.Controllers
         //Gets a Single Instance of Travel Data by Request Id
         [HttpGet]
         [Route("singleTravelData")]
-        public IActionResult Get([FromBody] int requestID)
+        public IActionResult Get([FromBody] TravelRequests TravelReq)
         {
-            var TravelReqs = _db.TravelRequests.Find(requestID);
-            return Json(TravelReqs);
+            var SingleTravelReq = _db.TravelRequests.Find(TravelReq.RequestID);
+            return Json(SingleTravelReq);
         }
 
         //Adds a new instance of Travel Data
@@ -106,9 +106,9 @@ namespace TRSRestAPI.Controllers
         //Deletes Travel Instance
         [HttpDelete]
         [Route("deleteTravelData")]
-        public IActionResult Delete([FromBody] int requestID)
+        public IActionResult Delete([FromBody] TravelRequests TravelReq)
         {
-            var travelRequest = _db.TravelRequests.Find(requestID);
+            var travelRequest = _db.TravelRequests.Find(TravelReq.RequestID);
             
             //Verifies if Request Instance Exits or has been booked
             if (travelRequest == null || travelRequest.RequestStatus == "Booked")
